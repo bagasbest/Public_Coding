@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main (){
+    int n,x=1,b,c,hasil;
+
+    cin>>n;
+
+    while(n%x==0){
+        x++;
+        cout<<x;
+    }cout<<endl;
+
+    b=x;
+    c=n%x;
+    while(b>c){
+        hasil =n/x;
+        cout<<hasil<<" ";
+        b--;
+    }
+
+    while(b>0){
+        hasil = n/x+c;
+        cout<<hasil<<" ";
+        b--;
+    }cout<<endl;
+    return 0;
+}
