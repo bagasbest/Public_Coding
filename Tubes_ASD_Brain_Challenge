@@ -1,0 +1,151 @@
+#include <bits/stdc++.h>
+#include <windows.h>
+using namespace std;
+
+typedef char infotype;
+typedef struct TElmtList *address;
+typedef struct TElmtList{
+        infotype info;
+        address next;
+}ElmtList;
+
+typedef struct{
+        address TOP;
+}Stack;
+
+/////////SELEKTOR////////////
+#define Top(S) (S).TOP
+#define Info(S) (S)->info
+#define Next(S) (S)->next
+#define Infotop(S) (S).TOP->info
+
+void CreateEmpty(Stack *S){
+     Top(*S) = NULL;
+}
+
+bool IsEmpty(Stack S){
+    return (Top(S)==NULL);
+}
+
+address Alok(infotype X){
+        address S = address (malloc(sizeof(ElmtList)));
+
+                if(S != NULL){
+                    Info(S) = X;
+                    Next(S) = NULL;
+                }
+                return S;
+}
+
+void Dealok(address *bersih){
+     free(*bersih);
+}
+
+void Push(Stack *S, infotype X){
+     address Temp = Alok(X);
+
+     if(Temp != NULL){
+        Next(Temp) = Top(*S);
+        Top(*S)  = Temp;
+     }
+}
+
+void Pop(Stack *S, infotype *X){
+     if(!IsEmpty(*S)){
+        address Temp = Top(*S);
+        *X = Infotop(*S);
+
+        Top(*S) = Next(Top(*S));
+        Next(Temp) = NULL;
+        Dealok(&Temp);
+     }
+}
+
+void PrintInfo(Stack S){
+     if(!IsEmpty(S)){
+        address Temp = Top(S);
+        while(Next(Temp) != NULL){
+            cout<<Info(Temp)<<" ";
+            Temp = Next(Temp);
+        }
+        cout<<Info(Temp);
+     }
+}
+
+int counter(Stack S){
+    int sum=0;
+
+    while (Top(S) != NULL){
+        if(Infotop(S) == '*')
+        sum=sum+1;
+        Top(S) = Next(Top(S));
+    }
+    return sum;
+}
+int main(){
+    bool mati = false;
+    Stack S[100];
+    infotype X;
+
+    int n,bintang,i=0;;
+    char m,pilihan;
+    char kar[6] = {'+','-','*','/','@','$'};
+    srand(time(0));
+
+    do{
+        cout<<"---GAME BRAIN CHALLENGE---"<<endl;
+        cout<<"[1] Main "<<endl;
+        cout<<"[2] Keluar "<<endl<<endl;
+
+        cout<<"Pilihan : "; cin>>pilihan;
+
+            switch (pilihan){
+                    case '1'    :
+                                    for(i=0; i<3; i++){
+
+                                    system("cls");
+                                    CreateEmpty(&S[i]);
+                                      cout<<"Scene "<<i+1<<endl;
+                                      for(int j=0; j<15; j++){
+                                          Push(&S[i],kar[rand()%6]);
+
+                                      }PrintInfo(S[i]); cout<<endl;
+                                        cout<<" Note: ingatlah jumlah * yang muncul pada scene ini "<<endl;
+                                        Sleep(5000);
+                                  }
+                                  while(!mati){
+                                        system("cls");
+                                    cout<<"Jumlah * yang muncul pada scene"<<i-2<<endl;
+
+                                    cout<<"jawab "; cin>>bintang; cout<<endl;
+                                    if(bintang == counter(S[i-3])){
+
+                                        system("cls");
+                                        CreateEmpty(&S[i]);
+                                        cout<<"Scene "<<i+1<<endl;
+                                        for(int j=0; j<15; j++){
+                                            Push(&S[i],kar[rand()%6]);
+
+                                      }PrintInfo(S[i]); cout<<endl;
+                                        cout<<" Note: ingatlah jumlah * yang muncul pada scene ini "<<endl;
+                                        Sleep(5000);
+                                    }else{
+                                        cout<<"skor anda : "<<i-3<<endl;
+                                        cout<<"Terima kasih"<<endl;
+                                        return 0;
+                                    }
+                                    i++;
+
+                                  }
+
+                                break;
+
+                    case '2'    : return 0;
+                                break;
+
+                    default   : cout<<"INPUT SALAH"<<endl;
+                                break;
+            }
+    }while(pilihan != '2');
+
+}
