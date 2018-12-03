@@ -115,7 +115,7 @@ int main(){
                                   }
                                   while(!mati){
                                         system("cls");
-                                    cout<<"Jumlah * yang muncul pada scene"<<i-2<<endl;
+                                    cout<<"Jumlah * yang muncul pada scene "<<i-2<<endl;
 
                                     cout<<"jawab "; cin>>bintang; cout<<endl;
                                     if(bintang == counter(S[i-3])){
