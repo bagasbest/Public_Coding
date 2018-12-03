@@ -1,0 +1,228 @@
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+
+typedef int infotype;
+typedef struct tNode *addrNode;
+typedef struct tNode{
+		infotype info;
+		addrNode left;
+		addrNode right;
+}Node;
+
+typedef addrNode BinTree;
+
+/////selektor////////
+#define Root(T) (T)->info
+#define Left(T) (T)->left
+#define Right(T) (T)->right
+
+bool IsEmpty(BinTree T){
+	 return (T == NULL);
+}
+
+bool IsTreeOneElmt (BinTree T){
+	if (!IsEmpty(T)){
+		return (Left(T) == NULL &&  Right(T) == NULL);
+	}else{
+		return false;
+	}
+}
+
+bool IsUnerLeft (BinTree T){
+	if(!IsEmpty(T)){
+		return (Left(T) != NULL && Right(T) == NULL);
+	}else{
+		return false;
+	}
+}
+
+bool IsUnerRight (BinTree T){
+	if(!IsEmpty(T)){
+		return (Left(T) == NULL && Right(T) != NULL);
+	}else{
+		return false;
+	}	
+}
+
+bool IsBiner (BinTree T){
+	if(!IsEmpty(T)){
+		return (Left(T) != NULL && Right(T) != NULL);
+	}
+}
+
+addrNode Alok(infotype X){
+	addrNode T = addrNode(malloc(sizeof(Node)));
+	
+	if(!IsEmpty(T)){
+		Root(T) = X;
+		Left(T) = NULL;
+		Right(T) = NULL;
+	}
+	return T;
+}
+
+void Dealok(addrNode T){
+	free (T);
+}
+
+BinTree Tree(infotype X, addrNode L, addrNode R){
+			addrNode T = Alok(X);
+			
+			if(!IsEmpty(T)){
+				Left(T) = L;
+				Right(T) = R;
+			}
+			return T;
+}
+
+
+
+void PrintPreOrder (BinTree T){
+	
+	
+		if(IsEmpty(T)){
+			return;
+		}else{
+			
+			cout<<Root(T); if(Left(T) != NULL) cout<<", ";
+			PrintPreOrder (Left(T));
+			if (Right(T) != NULL) cout<<", ";
+			PrintPreOrder (Right(T));
+		}
+		
+}
+
+int  NbElmt(BinTree T){
+	 if(!IsEmpty(T)){
+	 	if (IsTreeOneElmt(T)){
+	 		return 1;
+		 }else{
+			return 1+NbElmt(Left(T))+NbElmt(Right(T));		 	
+		 }
+	 }
+}
+
+int NbDaun(BinTree T){
+	if(!IsEmpty(T)){
+		if(IsTreeOneElmt(T)){
+			return 1;
+		}else{
+			if(IsUnerLeft(T)){
+				return NbDaun(Left(T));
+			}else if(IsUnerRight(T)){
+				return NbDaun(Right(T));
+			}else{		
+			 return NbDaun(Left(T))+NbDaun(Right(T));
+		}
+	}
+}
+}
+
+int Tinggi(BinTree T){ //tinggi atau kedalaman
+	int tLeft, tRight, max;
+	
+	if(!IsEmpty(T)){
+		if(IsTreeOneElmt(T)){
+			return 1;
+		}else{
+			tLeft = Tinggi(Left(T));
+			tRight = Tinggi(Right(T)); 
+			
+			if(tLeft > tRight){
+				return 1 + Tinggi(Left(T));
+			}else{
+				return 1 + Tinggi(Right(T));
+			}
+		}
+	}
+}
+
+void Add_Kiri(BinTree *T, infotype X){
+	 
+	 if(IsEmpty(*T)){
+	 	*T = Tree(X, NULL, NULL);
+	 }else{
+	 	Add_Kiri(&(Left(*T)), X);
+	 }
+}
+
+void Add_Kanan(BinTree *T, infotype X){
+	
+	if(IsEmpty(*T)){
+		*T = Tree(X, NULL, NULL);
+	}else{
+		Add_Kanan(&(Right(*T)), X);
+	}
+}
+
+void Binary_Insert(BinTree *T, infotype X){
+	 
+	 if(IsEmpty(*T)){
+	 	*T = Tree(X, NULL, NULL);
+	 }else{
+	 	if(X < Root(*T)){
+	 		Binary_Insert(&(Left(*T)),X);
+		 }else{
+		 	Binary_Insert(&(Right(*T)), X);
+		 }
+	 }
+}
+void Dell_Kiri(BinTree *T, infotype *X){
+	addrNode pDel;
+	
+	if(IsTreeOneElmt(*T)){
+		*X = Root(*T);
+		pDel = *T;
+		Left(*T)= NULL;
+		Right(*T)=NULL;
+		Dealok(pDel); 
+		*T=NULL;
+	}else{
+		if(IsUnerLeft(*T)){
+			Dell_Kiri(&(Right(*T)), &(*X));
+		}else{
+			Dell_Kiri(&(Left(*T)), &(*X));
+		}
+	}
+}
+
+void Dell_Kanan(BinTree *T, infotype *X){
+	addrNode pDel;
+	
+	if(IsTreeOneElmt(*T)){
+		*X = Root(*T);
+		pDel = *T;
+		Left(*T) =NULL;
+		Right(*T) = NULL;
+		
+		Dealok(pDel);
+		*T = NULL;
+	}else{
+		if (IsUnerRight(*T)){
+			Dell_Kanan(&(Right(*T)), &(*X));
+		}else{
+			Dell_Kanan(&(Left(*T)), &(*X));
+		}
+	}
+}
+
+int main(){
+	BinTree T=NULL;
+	infotype X;
+	
+	Binary_Insert(&T, 2);
+	Binary_Insert(&T, 3);
+	Binary_Insert(&T, 1);
+	Binary_Insert(&T, 2);
+	//Dell_Kiri(&T, &X);
+	//Dell_Kanan(&T, &X);
+	
+	cout<<'(';
+	PrintPreOrder(T);  
+	cout<<')'<<endl;
+	
+	cout<<"TINGGI POHON : "<<Tinggi(T);
+	
+
+}
