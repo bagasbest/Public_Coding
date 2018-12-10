@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>  // SEBUAH LIBRARY YANG BERISI KUMPULAN LIBRARY STANDAR
+#include <windows.h> // UNTUK SYSTEM("CLS")
+#include <fstream> // EKSTERNAL
+
+using namespace std;
+
+typedef char infotype;
+typedef struct TElmtList *address;
+typedef struct TElmtList{
+        infotype info;
+        address next;
+}ElmtList;
+
+typedef struct {
+        address head;
+        address tail;
+}Queue;
+
+/////////////////////SELEKTOR//////////////////////////
+#define Head(Q) (Q).head
+#define Tail(Q) (Q).tail
+#define Next(Q) (Q)->next
+#define Info(Q) (Q)->info
+#define InfoHead(Q) (Q).head->info
+
+void CreateEmpty(Queue *Q){
+     Head(*Q) = NULL;
+     Tail(*Q) = NULL;
+}
+
+bool IsEmpty(Queue Q){
+    return (Head(Q) == NULL && Tail(Q) == NULL);
+}
+
+address Alokasi(infotype X){
+        address Q = address(malloc(sizeof(ElmtList)));
+
+        if(Q != NULL){
+            Info(Q) = X;
+            Next(Q) = NULL;
+        }
+        return Q;
+}
+
+void Dealokasi(address P){
+     free (P);
+}
+
+void Enqueue(Queue *Q, infotype X){
+        address P = Alokasi(X);
+
+        if(P != NULL){
+            if(IsEmpty(*Q)){
+                Head(*Q) = P;
+                Tail(*Q) = P;
+            }else{
+                Next(Tail(*Q)) = P;
+                Tail(*Q) = P;
+            }
+        }
+}
+
+void Dequeue(Queue *Q, infotype *X){
+     if(!IsEmpty(*Q)){
+        address P = Head(*Q);
+        *X = Info(P);
+
+        if(Head(*Q) == NULL && Tail(*Q) == NULL){
+            Head(*Q) = Next(Head(*Q));
+            Next(P) = NULL;
+            Dealokasi(P);
+        }
+     }
+}
+
+void PrintInfo(Queue Q){
+     address P = Head(Q);
+     while (Next(P) != NULL){
+            cout<<Info(P)<<" ";
+            P = Next(P);
+     }
+     cout<<Info(P);
+}
